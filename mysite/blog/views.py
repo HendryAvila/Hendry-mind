@@ -1,57 +1,97 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import Http404
 from .models import Post
-from django.core.paginator import Paginator, EmptyPage,PageNotAnInteger
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.views.generic import ListView
 from .forms import EmailPostForm, CommentsForm
 from django.core.mail import send_mail
 from django.views.decorators.http import require_POST
+
 # Create your views here.
+
 """
+# Function-based view for listing posts (commented out in the code):
 def post_list(request):
+     '
+    Handles the display of a list of published posts with pagination.
+    Takes the `request` object and retrieves all published posts.
+    Implements pagination with 3 posts per page.
+
+    Returns:
+        HttpResponse: Rendered template with posts and pagination info.
+    '
     post_lists = Post.published.all()
-    paginator = Paginator(post_lists,3)
-    pageNumber = request.GET.get('page', 1)
+    paginator = Paginator(post_lists, 3)  # Paginate with 3 posts per page
+    pageNumber = request.GET.get('page', 1)  # Get the page number from the request
     try:
         posts = paginator.page(pageNumber)
     except PageNotAnInteger:
+        # If page is not an integer, deliver the first page
         posts = paginator.page(1)
     except EmptyPage:
+        # If the page is out of range, deliver the last page
         posts = paginator.page(paginator.num_pages)
     return render(request, "blog/post/list.html", {"posts": posts, "page_obj": posts})
 """
 
 class PostListViews(ListView):
-    """ alternative post list base in class with the generic class ListView provided by django"""
-    queryset = Post.published.all()
-    template_name = "blog/post/list.html"
-    context_object_name = 'posts'
-    paginate_by = 3
+    """
+    Class-based view for listing published posts using Django's generic ListView.
+    Alternative to the `post_list` function-based view.
+    """
+    queryset = Post.published.all()  # Retrieve all published posts
+    template_name = "blog/post/list.html"  # Template to render the post list
+    context_object_name = 'posts'  # Name of the context variable in the template
+    paginate_by = 3  # Number of posts per page
 
 def post_detail(request, year, month, day, post):
+    """
+    Handles the display of a single blog post along with its comments and comment form.
+
+    Args:
+        request: HttpRequest object.
+        year (int): Year of the post's publication.
+        month (int): Month of the post's publication.
+        day (int): Day of the post's publication.
+        post (str): Slug of the post.
+
+    Returns:
+        HttpResponse: Rendered template with the post, active comments, and comment form.
+    """
     post = get_object_or_404(Post,
                             status=Post.Status.PUBLISHED,
                             slug=post,
                             publish__year=year,
                             publish__month=month,
                             publish__day=day)
-    comments = post.comments.filter(active=True)
-    form = CommentsForm()
+    comments = post.comments.filter(active=True)  # Retrieve only active comments
+    form = CommentsForm()  # Instantiate an empty comment form
     return render(request, "blog/post/detail.html", {"post": post,
                                                     "comments": comments,
-                                                    "form":form
-                                                    })
+                                                    "form": form})
+
 @require_POST
 def post_comment(request, post_id):
+    """
+    Handles the submission of a comment for a specific post.
+
+    Args:
+        request: HttpRequest object containing the POST data.
+        post_id (int): ID of the post being commented on.
+
+    Returns:
+        HttpResponse: Rendered template showing the post, comment form, and the saved comment.
+    """
     post = get_object_or_404(Post,
                             id=post_id,
                             status=Post.Status.PUBLISHED)
     comment = None
-    form = CommentsForm(data=request.POST)
+    form = CommentsForm(data=request.POST)  # Bind the submitted data to the form
     if form.is_valid():
+        # If form data is valid, save the comment without committing to the database
         comment = form.save(commit=False)
-        comment.post = post
-        comment.save()
+        comment.post = post  # Link the comment to the post
+        comment.save()  # Save the comment to the database
     return render(request, "blog/post/comment.html",
                 {
                 "post": post,
@@ -60,27 +100,36 @@ def post_comment(request, post_id):
                 })
 
 def post_share(request, post_id):
-    # Retrieve post by id
-    post = get_object_or_404(Post, id=post_id, \
-                            status=Post.Status.PUBLISHED)
-    sent = False
+    """
+    Handles the sharing of a post via email.
+
+    Args:
+        request: HttpRequest object containing the POST data (if form submitted).
+        post_id (int): ID of the post to share.
+
+    Returns:
+        HttpResponse: Rendered template showing the sharing form and success status.
+    """
+    # Retrieve the post by ID
+    post = get_object_or_404(Post, id=post_id, status=Post.Status.PUBLISHED)
+    sent = False  # Track if the email was sent
 
     if request.method == 'POST':
         # Form was submitted
-        form = EmailPostForm(request.POST)
+        form = EmailPostForm(request.POST)  # Bind submitted data to the email form
         if form.is_valid():
-            # Form fields passed validation
-            cd = form.cleaned_data
-            post_url = request.build_absolute_uri(post.getAbsoluteUrl())
-            subject = f"{cd['name']} recommends you read " \
-                        f"{post.title}"
+            # If form data is valid, send the email
+            cd = form.cleaned_data  # Get cleaned data from the form
+            post_url = request.build_absolute_uri(post.getAbsoluteUrl())  
+            # Build the full URL to the post
+            subject = f"{cd['name']} recommends you read {post.title}"
             message = f"Read {post.title} at {post_url}\n\n" \
-                    f"{cd['name']}\'s comment: {cd['comments']}"
-            send_mail(subject, message, 'bloghendrytest@gmail.com',
-                    [cd['to']])
-            sent = True
+                      f"{cd['name']}\'s comment: {cd['comments']}"
+            send_mail(subject, message, 'bloghendrytest@gmail.com', [cd['to']])
+            sent = True  # Update the sent status
 
     else:
+        # If no data was submitted, display an empty form
         form = EmailPostForm()
     return render(request, 'blog/post/share.html', {'post': post,
                                                     'form': form,
