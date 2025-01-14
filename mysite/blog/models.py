@@ -76,7 +76,7 @@ class Post(models.Model):
         """
         return self.title
     
-    def getAbsoluteUrl(self):
+    def get_absolute_url(self):
         """
         Generates the absolute URL for a specific post.
         Returns:
