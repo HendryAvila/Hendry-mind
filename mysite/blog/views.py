@@ -6,21 +6,26 @@ from django.views.generic import ListView
 from .forms import EmailPostForm, CommentsForm
 from django.core.mail import send_mail
 from django.views.decorators.http import require_POST
+from taggit.models  import Tag
 
 # Create your views here.
 
-"""
+
 # Function-based view for listing posts (commented out in the code):
-def post_list(request):
-     '
+def post_list(request, tag_slug=None):
+    """
     Handles the display of a list of published posts with pagination.
     Takes the `request` object and retrieves all published posts.
     Implements pagination with 3 posts per page.
 
     Returns:
         HttpResponse: Rendered template with posts and pagination info.
-    '
+    """
     post_lists = Post.published.all()
+    tag = None
+    if tag_slug:
+        tag = get_object_or_404(Tag, slug=tag_slug)
+        post_lists = post_lists.filter(tags__in = [tag])
     paginator = Paginator(post_lists, 3)  # Paginate with 3 posts per page
     pageNumber = request.GET.get('page', 1)  # Get the page number from the request
     try:
@@ -31,8 +36,8 @@ def post_list(request):
     except EmptyPage:
         # If the page is out of range, deliver the last page
         posts = paginator.page(paginator.num_pages)
-    return render(request, "blog/post/list.html", {"posts": posts, "page_obj": posts})
-"""
+    return render(request, "blog/post/list.html", {"posts": posts, "tag": tag})
+
 
 class PostListViews(ListView):
     """
