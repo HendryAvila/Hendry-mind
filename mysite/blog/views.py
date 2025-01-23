@@ -136,7 +136,7 @@ def post_share(request, post_id):
         if form.is_valid():
             # If form data is valid, send the email
             cd = form.cleaned_data  # Get cleaned data from the form
-            post_url = request.build_absolute_uri(post.getAbsoluteUrl())  
+            post_url = request.build_absolute_uri(post.get_absolute_url())  
             # Build the full URL to the post
             subject = f"{cd['name']} recommends you read {post.title}"
             message = f"Read {post.title} at {post_url}\n\n" \
