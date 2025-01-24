@@ -3,11 +3,13 @@ from django.http import Http404
 from .models import Post
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.views.generic import ListView
-from .forms import EmailPostForm, CommentsForm
+from .forms import EmailPostForm, CommentsForm, SearchForm
 from django.core.mail import send_mail
 from django.views.decorators.http import require_POST
 from taggit.models  import Tag
 from django.db.models import Count
+from django.contrib.postgres.search import SearchVector,SearchQuery,SearchRank
+from django.contrib.postgres.search import TrigramSimilarity
 
 #Usuario -> URL -> Vista -> Modelo -> Vista -> Template -> Usuario
 
@@ -136,7 +138,7 @@ def post_share(request, post_id):
         if form.is_valid():
             # If form data is valid, send the email
             cd = form.cleaned_data  # Get cleaned data from the form
-            post_url = request.build_absolute_uri(post.getAbsoluteUrl())  
+            post_url = request.build_absolute_uri(post.get_absolute_url())  
             # Build the full URL to the post
             subject = f"{cd['name']} recommends you read {post.title}"
             message = f"Read {post.title} at {post_url}\n\n" \
@@ -150,3 +152,18 @@ def post_share(request, post_id):
     return render(request, 'blog/post/share.html', {'post': post,
                                                     'form': form,
                                                     'sent': sent})
+
+    #Usuario → Accede a /search/ → Vista muestra formulario → Usuario escribe "django" y envía → Navegador redirige a /search/?query=django → Vista procesa la búsqueda → Template muestra resultados.
+def post_search(request):
+
+    form = SearchForm()
+    query = None
+    results = []
+    if 'query' in request.GET:
+        form = SearchForm(request.GET)
+        if form.is_valid():
+            query = form.cleaned_data['query']
+            results = Post.published.annotate(
+                similarity= TrigramSimilarity('title', query)
+            ).filter(similarity__gt=0.1).order_by('-similarity')
+    return render(request, 'blog/post/search_post.html', {'results':results, 'query':query, 'form':form})

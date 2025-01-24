@@ -8,7 +8,7 @@
     <p>
       "{{ post.title }}" was successfully sent to {{ form.cleaned_data.to }}.
     </p>
-    <a href="{{ post.getAbsoluteUrl }}">Back to the post</a>
+    <a href="{{ post.get_absolute_url }}">Back to the post</a>
   {% else %}
     <h1>Share "{{ post.title }}" by e-mail</h1>
     <form method="post" novalidate>
