@@ -9,6 +9,7 @@ from django.views.decorators.http import require_POST
 from taggit.models  import Tag
 from django.db.models import Count
 from django.contrib.postgres.search import SearchVector,SearchQuery,SearchRank
+from django.contrib.postgres.search import TrigramSimilarity
 
 #Usuario -> URL -> Vista -> Modelo -> Vista -> Template -> Usuario
 
@@ -152,10 +153,9 @@ def post_share(request, post_id):
                                                     'form': form,
                                                     'sent': sent})
 
+    #Usuario → Accede a /search/ → Vista muestra formulario → Usuario escribe "django" y envía → Navegador redirige a /search/?query=django → Vista procesa la búsqueda → Template muestra resultados.
 def post_search(request):
-    """ 
-    Usuario → Accede a /search/ → Vista muestra formulario → Usuario escribe "django" y envía → Navegador redirige a /search/?query=django → Vista procesa la búsqueda → Template muestra resultados.
-    """
+
     form = SearchForm()
     query = None
     results = []
@@ -163,9 +163,7 @@ def post_search(request):
         form = SearchForm(request.GET)
         if form.is_valid():
             query = form.cleaned_data['query']
-            search_vector = SearchVector('title','body')
-            search_query = SearchQuery(query)
             results = Post.published.annotate(
-                search = search_vector, rank=SearchRank(search_vector, search_query)
-            ).filter(search=search_query).order_by('-rank')
+                similarity= TrigramSimilarity('title', query)
+            ).filter(similarity__gt=0.1).order_by('-similarity')
     return render(request, 'blog/post/search_post.html', {'results':results, 'query':query, 'form':form})
