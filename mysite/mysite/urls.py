@@ -8,6 +8,6 @@ sitemaps = {'posts': PostSitemaps}
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path("blog/", include("blog.urls", namespace="blog")),
+    path("", include("blog.urls", namespace="blog")),
     path("sitemap.xml", sitemap, {'sitemaps': sitemaps,}, name='django.contrib.sitemaps.views.sitemap')
 ]
