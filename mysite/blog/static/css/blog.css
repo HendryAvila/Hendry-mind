@@ -1,187 +1,190 @@
 /* ===== Variables de color y tipografía ===== */
 :root {
-    /* Paleta Lo-Fi suave */
-    --color-primary: #2B3A4A;    /* Azul oscuro apagado */
-    --color-secondary: #6D7A89;  /* Gris azulado */
-    --color-accent: #D89D8A;     /* Salmón terroso */
-    --color-background: #F0EBE6; /* Beige claro */
-    --color-text: #3A3A3A;       /* Gris oscuro suave */
-    --color-header-footer: #183059; /* Mantenemos tu azul original pero más oscuro */
-    --color-sidebar: #E5DED8;    /* Beige medio */
-    
-    /* Tipografía */
-    --font-body: 'Inter', system-ui, -apple-system, sans-serif;
-    --font-headings: 'Space Grotesk', 'Roboto', sans-serif;
-    --font-mono: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
-  }
+  /* Paleta profesional moderna */
+  --color-primary: #1E3A8A;    /* Azul intenso */
+  --color-secondary: #64748B;  /* Gris azulado suave */
+  --color-accent: #F43F5E;     /* Rosa fuerte */
+  --color-background: #d5e2ee; /* Blanco humo */
+  --color-text: #1F2937;       /* Gris oscuro */
+  --color-header-footer: #111827; /* Negro grisáceo */
+  --color-sidebar: #E5E7EB;    /* Gris claro */
   
-  /* ===== Estilos base ===== */
-  body {
-    margin: 0;
-    padding: 0;
-    font-family: var(--font-body);
-    color: var(--color-text);
-    background-color: var(--color-background);
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-    line-height: 1.6;
-  }
-  
-  /* ===== Encabezado ===== */
-  .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: var(--color-header-footer);
-    padding: 1rem 2rem;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  }
-  
-  #header-title {
-    font-family: var(--font-headings);
-    font-size: 1.6rem;
-    color: var(--color-background);
-    letter-spacing: -0.5px;
-    margin: 0;
-  }
-  
-  .navbar ul {
-    display: flex;
-    gap: 2rem;
-    list-style: none;
-    margin: 0;
-    padding: 0;
-  }
-  
-  .navbar a {
-    color: var(--color-background);
-    text-decoration: none;
-    font-size: 0.95rem;
-    transition: opacity 0.2s ease;
-  }
-  
-  .navbar a:hover {
-    opacity: 0.8;
-    text-decoration: underline;
-  }
-  
-  /* ===== Contenido principal ===== */
-  .main {
-    flex: 1;
-    padding: 2rem;
-    display: flex;
-    gap: 2rem;
-    max-width: 1200px;
-    margin: 0 auto;
-    width: 100%;
-    box-sizing: border-box;
-  }
-  
-  #content {
-    flex: 2;
-    background: white;
-    padding: 2rem;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-  }
-  
-  #sidebar {
-    flex: 1;
-    background-color: var(--color-sidebar);
-    padding: 2rem;
-    border-radius: 8px;
-    height: fit-content;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-  }
-  
-  /* ===== Tipografía y elementos de texto ===== */
-  h1, h2, h3 {
-    font-family: var(--font-headings);
-    font-weight: 500;
-    color: var(--color-primary);
-    margin-top: 0;
-  }
-  
-  h1 {
-    font-size: 2.2rem;
-    border-bottom: 2px solid var(--color-accent);
-    padding-bottom: 0.5rem;
-    margin-bottom: 1.5rem;
-  }
-  
-  h2 {
-    font-size: 1.5rem;
-    margin: 2rem 0 1rem;
-  }
-  
-  a {
-    color: var(--color-accent);
-    text-decoration: none;
-    transition: color 0.2s ease;
-  }
-  
-  a:hover {
-    color: var(--color-primary);
-    text-decoration: underline;
-  }
-  
-  /* ===== Componentes específicos ===== */
-  /* Fechas */
-  p.date {
-    color: var(--color-secondary);
-    font-size: 0.9rem;
-    margin: 0.5rem 0;
-  }
-  
-  /* Paginación */
-  .pagination {
-    margin: 2rem 0;
-    font-weight: 500;
-  }
-  
-  /* Formularios */
-  input, textarea {
-    background: var(--color-background);
-    border: 1px solid var(--color-secondary);
-    border-radius: 4px;
-    padding: 0.8rem;
-    width: 100%;
-    max-width: 400px;
-    margin-bottom: 1rem;
-  }
-  
-  input[type=submit] {
-    background-color: var(--color-accent);
-    color: white;
-    border: none;
-    padding: 1rem 2rem;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-  }
-  
-  input[type=submit]:hover {
-    background-color: var(--color-primary);
-  }
-  
-  /* Comentarios */
-  .comment {
-    padding: 1rem;
-    background: var(--color-background);
-    border-radius: 4px;
-    margin-bottom: 1rem;
-  }
-  
-  .comment:nth-child(even) {
-    background: var(--color-sidebar);
-  }
-  
-  /* ===== Pie de página ===== */
-  .footer {
-    text-align: center;
-    background-color: var(--color-header-footer);
-    color: var(--color-background);
-    padding: 1.5rem;
-    margin-top: auto;
-    font-size: 0.9rem;
-  }
+  /* Tipografía */
+  --font-body: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-headings: 'Space Grotesk', 'Poppins', sans-serif;
+  --font-mono: 'Fira Code', Consolas, monospace;
+}
+
+/* ===== Estilos base ===== */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-body);
+  color: var(--color-text);
+  background-color: var(--color-background);
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  line-height: 1.7;
+}
+
+/* ===== Encabezado ===== */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: var(--color-header-footer);
+  padding: 1.2rem 2rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+}
+
+#header-title {
+  font-family: var(--font-headings);
+  font-size: 1.8rem;
+  color: var(--color-background);
+  margin: 0;
+}
+
+.navbar ul {
+  display: flex;
+  gap: 1.5rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.navbar a {
+  color: var(--color-background);
+  text-decoration: none;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.navbar a:hover {
+  color: var(--color-accent);
+  transform: scale(1.05);
+}
+
+/* ===== Contenido principal ===== */
+.main {
+  flex: 1;
+  padding: 2.5rem;
+  display: flex;
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+#content {
+  flex: 2;
+  background: white;
+  padding: 2.5rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+#sidebar {
+  flex: 1;
+  background-color: var(--color-sidebar);
+  padding: 2rem;
+  border-radius: 12px;
+  height: fit-content;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* ===== Tipografía y elementos de texto ===== */
+h1, h2, h3 {
+  font-family: var(--font-headings);
+  color: var(--color-primary);
+  margin-top: 0;
+}
+
+h1 {
+  font-size: 2.4rem;
+  border-bottom: 3px solid var(--color-accent);
+  padding-bottom: 0.6rem;
+  margin-bottom: 2rem;
+}
+
+h2 {
+  font-size: 1.8rem;
+  margin: 1.5rem 0 1rem;
+}
+
+a {
+  color: var(--color-accent);
+  text-decoration: none;
+  transition: color 0.2s ease, text-shadow 0.2s ease;
+}
+
+a:hover {
+  color: var(--color-primary);
+  text-shadow: 0 0 5px rgba(244, 63, 94, 0.5);
+}
+
+/* ===== Componentes específicos ===== */
+/* Fechas */
+p.date {
+  color: var(--color-secondary);
+  font-size: 0.9rem;
+  margin: 0.5rem 0;
+}
+
+/* Paginación */
+.pagination {
+  margin: 2rem 0;
+  font-weight: 600;
+}
+
+/* Formularios */
+input, textarea {
+  background: var(--color-background);
+  border: 1px solid var(--color-secondary);
+  border-radius: 6px;
+  padding: 0.9rem;
+  width: 100%;
+  max-width: 400px;
+  margin-bottom: 1rem;
+  font-size: 1rem;
+}
+
+input[type=submit] {
+  background-color: var(--color-accent);
+  color: white;
+  border: none;
+  padding: 1rem 2rem;
+  cursor: pointer;
+  font-size: 1rem;
+  border-radius: 6px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+input[type=submit]:hover {
+  background-color: var(--color-primary);
+  transform: scale(1.05);
+}
+
+/* Comentarios */
+.comment {
+  padding: 1rem;
+  background: var(--color-background);
+  border-radius: 6px;
+  margin-bottom: 1rem;
+}
+
+.comment:nth-child(even) {
+  background: var(--color-sidebar);
+}
+
+/* ===== Pie de página ===== */
+.footer {
+  text-align: center;
+  background-color: var(--color-header-footer);
+  color: var(--color-background);
+  padding: 2rem;
+  margin-top: auto;
+  font-size: 0.95rem;
+}
