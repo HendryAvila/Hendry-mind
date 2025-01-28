@@ -14,7 +14,6 @@
       <ul>
         <li id="home"><a href="/blog/">Home</a></li>
         <li id="github"><a href="/blog/feed/">RSS Feed</a></li>
-        <li id="search-post"><a href="/blog/search/">Search post</a></li>
       </ul>
     </nav>
   </header>
@@ -24,6 +23,13 @@
       {% endblock %}
     </div>
     <div id="sidebar">
+
+      <form method="get" action="{% url 'blog:post_search' %}">
+        {{ searchForm.as_p }}
+        {% csrf_token %}
+        <input type="submit" value="Search">
+      </form>
+
       <p>
         This is my blog.
         I've written {% total_post %} so post far.

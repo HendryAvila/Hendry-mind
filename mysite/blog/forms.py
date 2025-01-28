@@ -13,4 +13,8 @@ class CommentsForm(forms.ModelForm):
         fields = ["name", "email", "body"]
 
 class SearchForm(forms.Form):
-    query = forms.CharField()
+    query = forms.CharField(
+        label="Search for posts",  # Este es el texto del label (puedes personalizarlo aquí)
+        required=False,
+        widget=forms.TextInput(attrs={'placeholder': 'Type your search term...'})
+    )
