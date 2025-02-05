@@ -1,72 +1,83 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const form = document.querySelector(".form");
+    // Selecciona TODOS los formularios con clase "form"
+    const forms = document.querySelectorAll(".form");
+    
+    // Función genérica para validación de emails
+    const validateEmailField = (emailInput) => {
+        const container = emailInput.closest(".share-email__container-input-box, .comment-post__container-input-box");
+        const errorSpan = container?.querySelector(".input__error-message");
+        const isValid = isValidEmail(emailInput.value);
 
-    if (!form) return;
-
-    const nameInput = document.querySelector(".form input[name='name']");
-    const emailElements = document.querySelectorAll(".share-email__email");
-
-    // Función para validar el campo de Name
-    function validateName() {
-        const nameErrorSpan = nameInput.closest(".share-email__container-input-box")?.querySelector(".input__error-message");
-        if (nameInput.validity.valueMissing) {
-            nameErrorSpan.textContent = "This field is required, please fill it.";
-            nameInput.classList.add("invalid");
-            nameInput.classList.remove("valid");
-        } else {
-            nameErrorSpan.textContent = "";
-            nameInput.classList.remove("invalid");
-            nameInput.classList.add("valid");
-        }
-    }
-
-    // Función para validar emails individualmente
-    function validateEmail(email) {
-        const errorSpan = email.closest(".share-email__container-input-box")?.querySelector(".input__error-message");
-        if (!isValidEmail(email.value)) {
+        if (!isValid) {
             errorSpan.textContent = "Please, add a correct email address. Example: yourEmail@example.com";
-            email.classList.add("invalid");
-            email.classList.remove("valid");
+            emailInput.classList.add("invalid");
+            emailInput.classList.remove("valid");
         } else {
             errorSpan.textContent = "";
-            email.classList.remove("invalid");
-            email.classList.add("valid");
+            emailInput.classList.remove("invalid");
+            emailInput.classList.add("valid");
         }
-    }
+        return isValid;
+    };
 
-    // Eventos para validación en tiempo real
-    if (nameInput) {
-        nameInput.addEventListener("input", validateName);
-        nameInput.addEventListener("blur", validateName);
-    }
+    // Función genérica para campos requeridos
+    const validateRequiredField = (input) => {
+        const container = input.closest(".share-email__container-input-box, .comment-post__container-input-box");
+        const errorSpan = container?.querySelector(".input__error-message");
+        const isValid = input.value.trim() !== "";
 
-    emailElements.forEach((email) => {
-        email.addEventListener("input", () => validateEmail(email));
-        email.addEventListener("blur", () => validateEmail(email));
-    });
-
-    // Validación en submit
-    form.addEventListener("submit", (event) => {
-        event.preventDefault();
-        let isValid = true;
-
-        if (nameInput) {
-            validateName();
-            if (nameInput.classList.contains("invalid")) isValid = false;
+        if (!isValid) {
+            errorSpan.textContent = "This field is required, please fill it.";
+            input.classList.add("invalid");
+            input.classList.remove("valid");
+        } else {
+            errorSpan.textContent = "";
+            input.classList.remove("invalid");
+            input.classList.add("valid");
         }
+        return isValid;
+    };
 
-        emailElements.forEach((email) => {
-            validateEmail(email);
-            if (email.classList.contains("invalid")) isValid = false;
+    // Aplica a todos los formularios
+    forms.forEach(form => {
+        const emailFields = form.querySelectorAll('input[type="email"]');
+        const requiredFields = form.querySelectorAll("[required]");
+
+        // Eventos para emails
+        emailFields.forEach(email => {
+            email.addEventListener("input", () => validateEmailField(email));
+            email.addEventListener("blur", () => validateEmailField(email));
         });
 
-        if (isValid) {
-            form.submit();
-        }
+        // Eventos para campos requeridos (excepto emails ya manejados)
+        requiredFields.forEach(field => {
+            if (field.type !== "email") {
+                field.addEventListener("input", () => validateRequiredField(field));
+                field.addEventListener("blur", () => validateRequiredField(field));
+            }
+        });
+
+        // Validación al enviar
+        form.addEventListener("submit", event => {
+            event.preventDefault();
+            let isFormValid = true;
+
+            // Validar emails
+            emailFields.forEach(email => {
+                if (!validateEmailField(email)) isFormValid = false;
+            });
+
+            // Validar requeridos
+            requiredFields.forEach(field => {
+                if (field.type === "email") return;
+                if (!validateRequiredField(field)) isFormValid = false;
+            });
+
+            if (isFormValid) form.submit();
+        });
     });
 });
 
-// Función de validación de email
 function isValidEmail(email) {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return regex.test(email);
