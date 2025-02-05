@@ -140,31 +140,79 @@ p.date {
 }
 
 /* Formularios */
-input, textarea {
+
+input {
+  border: none;
+  outline: none;
+  position: relative;
+  padding: 8px;
+  font-size: 14px;
+  width: 100%;
+}
+
+input:focus {
+  outline: none;
+}
+
+input.invalid {
+  animation: invalidBorder 0.5s forwards;
+}
+
+input.valid {
+  animation: validBorder 0.5s forwards;
+}
+
+/* Animación para borde inferior en rojo */
+@keyframes invalidBorder {
+  0% {
+      border-bottom: 2px solid transparent;
+      width: 0%;
+  }
+  100% {
+      border-bottom: 2px solid red;
+      width: 100%;
+  }
+}
+
+/* Animación para borde inferior en verde */
+@keyframes validBorder {
+  0% {
+      border-bottom: 2px solid transparent;
+      width: 0%;
+  }
+  100% {
+      border-bottom: 2px solid green;
+      width: 100%;
+  }
+}
+
+/* Estilos para el error en el texto */
+.input__error-message {
+  color: red;
+  font-size: 12px;
+  margin-top: 5px;
+}
+
+
+textarea {
   background: var(--color-background);
-  border: 1px solid var(--color-secondary);
+  border: 1px solid var(--color-secondary) ;
   border-radius: 6px;
   padding: 0.9rem;
   width: 100%;
   max-width: 400px;
   margin-bottom: 1rem;
   font-size: 1rem;
+  outline: none;
 }
 
-input[type=submit] {
-  background-color: var(--color-accent);
-  color: white;
-  border: none;
-  padding: 1rem 2rem;
-  cursor: pointer;
-  font-size: 1rem;
-  border-radius: 6px;
-  transition: background-color 0.3s ease, transform 0.2s ease;
-}
 
-input[type=submit]:hover {
-  background-color: var(--color-primary);
-  transform: scale(1.05);
+.input__error-message {
+  display: block;
+  min-height: 1.5em;
+  color: red;
+  font-size: 0.9rem;
+  margin-top: 0.25rem;
 }
 
 /* Comentarios */
@@ -187,4 +235,21 @@ input[type=submit]:hover {
   padding: 2rem;
   margin-top: auto;
   font-size: 0.95rem;
+}
+
+/* ===== Estilos adicionales para validación ===== */
+input[type=submit] {
+  background-color: var(--color-accent);
+  color: white;
+  border: none;
+  padding: 1rem 2rem;
+  cursor: pointer;
+  font-size: 1rem;
+  border-radius: 6px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+input[type=submit]:hover {
+  background-color: var(--color-primary);
+  transform: scale(1.05);
 }

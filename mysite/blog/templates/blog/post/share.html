@@ -11,8 +11,28 @@
     <a href="{{ post.get_absolute_url }}">Back to the post</a>
   {% else %}
     <h1>Share "{{ post.title }}" by e-mail</h1>
-    <form method="post" novalidate>
-      {{ form.as_p }}
+    <form class= "form" method="post" novalidate>
+      <div class="share-email__container-input-box">
+        <label for="{{ form.name.id_for_label }}">Name</label><br>
+        {{ form.name }}
+        <span class="input__error-message"></span>
+      </div>
+
+      <div class="share-email__container-input-box">
+        <label for="{{ form.email.id_for_label }}">From</label><br>
+        {{ form.email }}
+        <span class="input__error-message"></span>
+    </div>
+    <div class="share-email__container-input-box">
+        <label for="{{ form.to.id_for_label }}">To</label><br> <!-- Corregido aquí -->
+        {{ form.to }}
+        <span class="input__error-message"></span>
+    </div>
+
+      <div class="share-email__container-input-box">
+        <label for="{{ form.comments.id_for_label }}">Comments</label><br>
+        {{ form.comments }}
+      </div>
       {% csrf_token %}
       <input type="submit" value="Send e-mail">
     </form>
