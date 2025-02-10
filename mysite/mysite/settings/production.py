@@ -17,6 +17,7 @@ load_dotenv(dotenv_path)
 
 SECRET_KEY = '6u9q3VxZfLkPvRjWpBc2YQ8nJmHtTdX4'
 
+CSRF_TRUSTED_ORIGINS = ['https://blogpagedjango.onrender.com']
 
 DEBUG = False
 
@@ -132,3 +133,5 @@ EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
 EMAIL_PORT = os.getenv("EMAIL_PORT")
 EMAIL_USE_TLS = os.getenv("EMAIL_USE_TLS") == "True" 
+
+
