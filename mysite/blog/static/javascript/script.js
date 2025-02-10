@@ -1,3 +1,9 @@
+"stric mode";
+
+
+
+
+
 document.addEventListener("DOMContentLoaded", () => {
     // Selecciona TODOS los formularios con clase "form"
     const forms = document.querySelectorAll(".form");
