@@ -1,16 +1,16 @@
 <form action="{% url 'blog:post_comment' post.id %}" method="post" class="form">
   <div class="comment-post__container-input-box">
-    <label for="{{ form.name.id_for_label }}">Name</label><br>
+    <label for="{{ form.name.id_for_label }}">Nombre</label><br>
     {{ form.name }}
     <span class="input__error-message"></span>
   </div>
   <div class="comment-post__container-input-box">
-    <label for="{{ form.email.id_for_label }}">Email</label><br>
+    <label for="{{ form.email.id_for_label }}">Correo</label><br>
     {{ form.email }}
     <span class="input__error-message"></span>
   </div>
   <div class="comment-post__container-input-box">
-    <label for="{{ form.body.id_for_label }}">Comment</label><br>
+    <label for="{{ form.body.id_for_label }}">Comentario</label><br>
     {{ form.body }}
     <span class="input__error-message"></span>
   </div>

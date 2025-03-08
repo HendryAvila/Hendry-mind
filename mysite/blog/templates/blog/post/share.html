@@ -7,31 +7,31 @@
   {% if sent %}
     <h1>E-mail successfully sent</h1>
     <p>
-      "{{ post.title }}" was successfully sent to {{ form.cleaned_data.to }}.
+      "{{ post.title }}" Se envio correctamente a  {{ form.cleaned_data.to }}.
     </p>
-    <a href="{{ post.get_absolute_url }}">Back to the post</a>
+    <a href="{{ post.get_absolute_url }}">Volver al post</a>
   {% else %}
-    <h1>Share "{{ post.title }}" by e-mail</h1>
+    <h1>Compartir "{{ post.title }}" por correo</h1>
     <form class= "form" method="post" novalidate>
       <div class="share-email__container-input-box">
-        <label for="{{ form.name.id_for_label }}">Name</label><br>
+        <label for="{{ form.name.id_for_label }}">Nombre</label><br>
         {{ form.name }}
         <span class="input__error-message"></span>
       </div>
 
       <div class="share-email__container-input-box">
-        <label for="{{ form.email.id_for_label }}">From</label><br>
+        <label for="{{ form.email.id_for_label }}">Desde</label><br>
         {{ form.email }}
         <span class="input__error-message"></span>
     </div>
     <div class="share-email__container-input-box">
-        <label for="{{ form.to.id_for_label }}">To</label><br> <!-- Corregido aquí -->
+        <label for="{{ form.to.id_for_label }}">Para</label><br> <!-- Corregido aquí -->
         {{ form.to }}
         <span class="input__error-message"></span>
     </div>
 
       <div class="share-email__container-input-box">
-        <label for="{{ form.comments.id_for_label }}">Comments</label><br>
+        <label for="{{ form.comments.id_for_label }}">Commentarios</label><br>
         {{ form.comments }}
       </div>
       {% csrf_token %}

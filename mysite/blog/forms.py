@@ -6,13 +6,13 @@ class EmailPostForm(forms.Form):
         'class':'share-email__name',
         'required':'required',
         'maxlength':'25',
-        'placeholder':'Your name',
+        'placeholder':'Tu nombre',
     }))
     email = forms.EmailField(min_length=8, required=True, widget=forms.EmailInput(attrs={
         'class':'share-email__email',
         'required':'required',
         'minlength':'8',
-        'placeholder':'YourEmail@example.com',
+        'placeholder':'TuCorreo@ejemplo.com',
         'pattern': '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
         'autocomplete': 'off',
         'spellcheck': 'false',
@@ -21,14 +21,14 @@ class EmailPostForm(forms.Form):
         'class':'share-email__email',
         'required':'required',
         'minlength':'8',
-        'placeholder':'YourEmail@example.com',
+        'placeholder':'TuCorreo@ejemplo.com',
         'pattern': '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
         'autocomplete': 'off',
         'spellcheck': 'false',
     }))
     comments = forms.CharField(required=False, widget=forms.Textarea(attrs={
         'class':'share-email__comments',
-        'placeholder':'Your comments here...',
+        'placeholder':'Tus comentarios aqui...',
     }))
 
 class CommentsForm(forms.ModelForm):
@@ -40,13 +40,13 @@ class CommentsForm(forms.ModelForm):
                 'class':'comment-post__name',
                 'required':'required',
                 'maxlength':'25',
-                'placeholder':'Your name',
+                'placeholder':'tu nombre',
                 }),
             'email': forms.EmailInput(attrs={
                 'class':'comment-post__email',
                 'required':'required',
                 'minlength':'8',
-                'placeholder':'YourEmail@example.com',
+                'placeholder':'TuCorreo@ejemplo.com',
                 'pattern': '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
                 'autocomplete': 'off',
                 'spellcheck': 'false',
@@ -55,14 +55,14 @@ class CommentsForm(forms.ModelForm):
                 'class':'comment-post__body',
                 'required':'required',
                 'maxlength':'600',
-                'placeholder':'Your comment here...',
+                'placeholder':'Ru comentario aqui...',
             })
         }
                 
 
 class SearchForm(forms.Form):
     query = forms.CharField(
-        label="Search for posts",  # Este es el texto del label (puedes personalizarlo aquí)
+        label="Buscar post",  # Este es el texto del label (puedes personalizarlo aquí)
         required=False,
-        widget=forms.TextInput(attrs={'placeholder': 'Type your search term...'})
+        widget=forms.TextInput(attrs={'placeholder': 'Busca tu termino de busqueda...'})
     )

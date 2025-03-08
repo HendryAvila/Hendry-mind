@@ -12,9 +12,8 @@
     <h3 id="header-title">Hendry's Mind</h3>
     <nav class="navbar">
       <ul>
-        <li id="home"><a href="/blog/">Home</a></li>
+        <li id="home"><a href="/blog/">Inicio</a></li>
         <li id="github"><a href="/blog/feed/">RSS Feed</a></li>
-        <li id="github"><a href="{% url 'portfolio:portfolio_index' %}">Portfolio</a></li>
       </ul>
     </nav>
   </header>
@@ -32,17 +31,17 @@
       </form>
 
       <p>
-        This is my blog.
-        I've written {% total_post %} so post far.
+        Este es mi blog!
+        He escrito un total de  {% total_post %} hasta ahora!.
       </p>
       <p>
-        <a href="{% url 'blog:post_feed' %}">Subscribe to my RSS Feed</a>
+        <a href="{% url 'blog:post_feed' %}">Subscribete a mi RSS Feed</a>
       </p>
       <br>
-      <h2>Lates post</h2>
+      <h2>Ultimos post</h2>
       {% show_latest_posts %}
       <br>
-      <h2>Most commented posts</h2>
+      <h2>Post mas comentados</h2>
       {% get_most_commented_posts as most_commented_posts %}
       <ul>
         {% for post in most_commented_posts %}
