@@ -3,17 +3,17 @@
 {% block title %}Search post{% endblock %}
 {% block content %}
     {% if query %}
-        <h1>Post containing "{{ query }}"</h1>
+        <h1>Post conteniendo la palabra "{{ query }}"</h1>
         <h3>
             {% with results.count as total_results %}
-                Found {{ total_results }} result{{ total_results|pluralize }}
+                Encontrados {{ total_results }} resultados {{ total_results|pluralize }}
             {% endwith %}
         </h3>
         {% for post in results %}
             <h4><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></h4>
             {{ post.body|markdown|truncatewords_html:12 }}
         {% empty %}
-            <p>There are no results for "{{ query }}"</p>
+            <p>No hay resultados para "{{ query }}"</p>
         {% endfor %}
     {% endif %}
 {% endblock %}

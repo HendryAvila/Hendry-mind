@@ -1,11 +1,11 @@
 {% extends "blog/base.html" %}
 {% load blog_tags %}
 
-{% block title %}My Blog{% endblock %}
+{% block title %}Mi blog{% endblock %}
 
 {% block content %}
   {% if tag %}
-    <h2>Posts tagged with "{{ tag.name }}"</h2>
+    <h2>Posts tageados con: "{{ tag.name }}"</h2>
   {% endif %}
   {% for post in posts %}
     <h2>
@@ -23,7 +23,7 @@
       {% endfor %}
     </p>
     <p class="date">
-      Published {{ post.publish }} by {{ post.author }}
+      Publicado {{ post.publish }} por {{ post.author }}
     </p>
     {{ post.body|markdown|truncatewords_html:30  }}
   {% endfor %}
