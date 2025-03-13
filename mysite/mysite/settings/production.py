@@ -19,7 +19,7 @@ SECRET_KEY = '6u9q3VxZfLkPvRjWpBc2YQ8nJmHtTdX4'
 
 CSRF_TRUSTED_ORIGINS = ['https://blogpagedjango.onrender.com']
 
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = []
 RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
