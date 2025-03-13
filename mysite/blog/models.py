@@ -3,6 +3,8 @@ from django.utils import timezone
 from django.contrib.auth.models import User
 from django.urls import reverse
 from taggit.managers import TaggableManager
+from django.utils.text import slugify
+import unicodedata
 
 class PublishedManager(models.Manager):
     """
@@ -56,6 +58,15 @@ class Post(models.Model):
     published = PublishedManager()  # Custom manager to retrieve published posts only
 
     tags = TaggableManager()
+
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            # Normalizar el título para quitar caracteres especiales
+            normalized_title = unicodedata.normalize('NFKD', self.title).encode('ascii', 'ignore').decode('ascii')
+            self.slug = slugify(normalized_title)  # Convertimos el título a un slug
+
+        super().save(*args, **kwargs)  # Llamamos al método save original
 
     class Meta:
         """
