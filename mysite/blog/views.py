@@ -10,6 +10,10 @@ from taggit.models  import Tag
 from django.db.models import Count
 from django.contrib.postgres.search import SearchVector,SearchQuery,SearchRank
 from django.contrib.postgres.search import TrigramSimilarity
+import logging
+
+
+logger = logging.getLogger(__name__)  # Crea un logger
 
 #Usuario -> URL -> Vista -> Modelo -> Vista -> Template -> Usuario
 
@@ -17,31 +21,49 @@ from django.contrib.postgres.search import TrigramSimilarity
 
 
 # Function-based view for listing posts (commented out in the code):
+import logging
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+from django.shortcuts import render, get_object_or_404
+from blog.models import Post
+from taggit.models import Tag
+
+# Configurar el logger
+logger = logging.getLogger(__name__)
+
 def post_list(request, tag_slug=None):
     """
     Handles the display of a list of published posts with pagination.
     Takes the `request` object and retrieves all published posts.
-    Implements pagination with 3 posts per page.
-
-    Returns:
-        HttpResponse: Rendered template with posts and pagination info.
+    Implements pagination with 5 posts per page.
     """
+    logger.info("Entrando a la vista post_list")  # Log de inicio
+
     post_lists = Post.published.all()
     tag = None
+
     if tag_slug:
+        logger.info(f"Filtrando por tag: {tag_slug}")  # Log del tag recibido
         tag = get_object_or_404(Tag, slug=tag_slug)
-        post_lists = post_lists.filter(tags__in = [tag])
-    paginator = Paginator(post_lists, 5)  # Paginate with 3 posts per page
-    pageNumber = request.GET.get('page', 1)  # Get the page number from the request
+        post_lists = post_lists.filter(tags__in=[tag])
+
+    paginator = Paginator(post_lists, 5)  # Paginate with 5 posts per page
+    page_number = request.GET.get('page', 1)  # Get the page number from the request
+    logger.info(f"Página solicitada: {page_number}")  # Log de la paginación
+
     try:
-        posts = paginator.page(pageNumber)
+        posts = paginator.page(page_number)
     except PageNotAnInteger:
-        # If page is not an integer, deliver the first page
+        logger.warning("Número de página no es un entero, cargando la primera página")  # Log de advertencia
         posts = paginator.page(1)
     except EmptyPage:
-        # If the page is out of range, deliver the last page
+        logger.warning("Número de página fuera de rango, cargando última página")  # Log de advertencia
         posts = paginator.page(paginator.num_pages)
+    except Exception as e:
+        logger.error(f"Error en post_list: {e}", exc_info=True)  # Log de error
+        return render(request, "blog/post/error.html", {"error": e})  # Página de error opcional
+
     return render(request, "blog/post/list.html", {"posts": posts, "tag": tag})
+
 
 
 class PostListViews(ListView):

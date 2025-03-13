@@ -19,7 +19,7 @@ SECRET_KEY = '6u9q3VxZfLkPvRjWpBc2YQ8nJmHtTdX4'
 
 CSRF_TRUSTED_ORIGINS = ['https://blogpagedjango.onrender.com']
 
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = []
 RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
@@ -52,6 +52,27 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     "whitenoise.middleware.WhiteNoiseMiddleware",
 ]
+
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'level': 'DEBUG',  # Muestra logs detallados
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+    },
+}
+
+
 
 ROOT_URLCONF = 'mysite.urls'
 
