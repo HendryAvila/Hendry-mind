@@ -177,22 +177,18 @@ def post_share(request, post_id):
 
     #Usuario → Accede a /search/ → Vista muestra formulario → Usuario escribe "django" y envía → Navegador redirige a /search/?query=django → Vista procesa la búsqueda → Template muestra resultados.
 def post_search(request):
+    form = SearchForm(request.GET)
     query = None
     results = []
     
-    if 'query' in request.GET:
-        # Usa el formulario del request.GET para validar
-        form = SearchForm(request.GET)
-        if form.is_valid():
-            query = form.cleaned_data['query']
+    if form.is_valid():
+        query = form.cleaned_data['query']
+        if query:
             results = Post.published.annotate(
                 similarity=TrigramSimilarity('title', query)
             ).filter(similarity__gt=0.1).order_by('-similarity')
-    else:
-        form = SearchForm()  # Si necesitas pasar el formulario vacío
     
     return render(request, 'blog/post/search_post.html', {
         'results': results,
         'query': query,
-        # 'form': form  # ¡Ya no es necesario si usas el del context_processor!
     })

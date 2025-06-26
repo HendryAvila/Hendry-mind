@@ -1,41 +1,26 @@
 {% extends "blog/base.html" %}
-{% load blog_tags %}
 
-{% block title %}Share a post{% endblock %}
+{% block title %}Compartir un post{% endblock %}
 
 {% block content %}
-  {% if sent %}
-    <h1>E-mail successfully sent</h1>
-    <p>
-      "{{ post.title }}" Se envio correctamente a  {{ form.cleaned_data.to }}.
-    </p>
-    <a href="{{ post.get_absolute_url }}">Volver al post</a>
-  {% else %}
-    <h1>Compartir "{{ post.title }}" por correo</h1>
-    <form class= "form" method="post" novalidate>
-      <div class="share-email__container-input-box">
-        <label for="{{ form.name.id_for_label }}">Nombre</label><br>
-        {{ form.name }}
-        <span class="input__error-message"></span>
-      </div>
-
-      <div class="share-email__container-input-box">
-        <label for="{{ form.email.id_for_label }}">Desde</label><br>
-        {{ form.email }}
-        <span class="input__error-message"></span>
-    </div>
-    <div class="share-email__container-input-box">
-        <label for="{{ form.to.id_for_label }}">Para</label><br> <!-- Corregido aquí -->
-        {{ form.to }}
-        <span class="input__error-message"></span>
-    </div>
-
-      <div class="share-email__container-input-box">
-        <label for="{{ form.comments.id_for_label }}">Commentarios</label><br>
-        {{ form.comments }}
-      </div>
-      {% csrf_token %}
-      <input type="submit" value="Send e-mail">
-    </form>
-  {% endif %}
+    {% if sent %}
+        <div class="post-detail">
+            <h1>Email enviado con éxito</h1>
+            <p>
+                "{{ post.title }}" fue enviado correctamente a {{ form.cleaned_data.to }}.
+            </p>
+            <p><a href="{{ post.get_absolute_url }}">Volver al post</a></p>
+        </div>
+    {% else %}
+        <div class="post-detail">
+            <h1>Compartir "{{ post.title }}" por e-mail</h1>
+            <form method="post">
+                {{ form.as_p }}
+                {% csrf_token %}
+                <input type="submit" value="Enviar e-mail">
+            </form>
+        </div>
+    {% endif %}
 {% endblock %}
+
+{% block sidebar %}{% endblock %}

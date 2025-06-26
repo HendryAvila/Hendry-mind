@@ -1,19 +1,43 @@
 {% extends "blog/base.html" %}
 {% load blog_tags %}
-{% block title %}Search post{% endblock %}
+
+{% block title %}Resultados de Búsqueda{% endblock %}
+
 {% block content %}
     {% if query %}
-        <h1>Post conteniendo la palabra "{{ query }}"</h1>
-        <h3>
+        <h1>Resultados para: "{{ query }}"</h1>
+        
+        <p>
             {% with results.count as total_results %}
-                Encontrados {{ total_results }} resultados {{ total_results|pluralize }}
+                Se {{ total_results|pluralize:"encontró,encontraron" }} {{ total_results }} resultado{{ total_results|pluralize }}.
             {% endwith %}
-        </h3>
+        </p>
+
         {% for post in results %}
-            <h4><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></h4>
-            {{ post.body|markdown|truncatewords_html:12 }}
+            <article class="post-card">
+                <div class="post-card-content">
+                    <h3>
+                        <a href="{{ post.get_absolute_url }}">{{ post.title }}</a>
+                    </h3>
+                    <p class="post-meta">
+                        Por {{ post.author }} el {{ post.publish|date:"d F, Y" }}
+                    </p>
+                    <p>{{ post.body|markdown|truncatewords_html:25 }}</p>
+                </div>
+            </article>
         {% empty %}
-            <p>No hay resultados para "{{ query }}"</p>
+            <div class="post-detail">
+                <p>No se han encontrado resultados para tu búsqueda. Prueba con otros términos.</p>
+            </div>
         {% endfor %}
+    {% else %}
+        <div class="post-detail">
+             <h1>Realiza una búsqueda</h1>
+             <p>Usa el formulario en la cabecera de la página para buscar artículos en el blog.</p>
+        </div>
     {% endif %}
 {% endblock %}
+
+<div id="sidebar">
+    {% include 'blog/post/includes/sidebar_content.html' %}
+</div>

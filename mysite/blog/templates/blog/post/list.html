@@ -1,31 +1,39 @@
 {% extends "blog/base.html" %}
 {% load blog_tags %}
 
-{% block title %}Mi blog{% endblock %}
+{% block title %}Mi Blog{% endblock %}
 
 {% block content %}
-  {% if tag %}
-    <h2>Posts tageados con: "{{ tag.name }}"</h2>
-  {% endif %}
+  <h1>
+    {% if tag %}
+      Artículos sobre "{{ tag.name }}"
+    {% else %}
+      Últimas Publicaciones
+    {% endif %}
+  </h1>
+  
   {% for post in posts %}
-    <h2>
-      <a href="{{ post.get_absolute_url }}">
-        {{ post.title }}
-      </a>
-    </h2>
-    <p class="tags">
-      Tags:
-      {% for tag in post.tags.all %}
-        <a href="{% url 'blog:post_list_by_tag' tag.slug %}">
-          {{ tag.name }}
-        </a>
-        {% if not forloop.last%} , {% endif %}
-      {% endfor %}
-    </p>
-    <p class="date">
-      Publicado {{ post.publish }} por {{ post.author }}
-    </p>
-    {{ post.body|markdown|truncatewords_html:30  }}
+    <article class="post-card">
+      <div class="post-card-content">
+        <h2>
+          <a href="{{ post.get_absolute_url }}">{{ post.title }}</a>
+        </h2>
+        <p class="post-meta">
+          Por {{ post.author }} el {{ post.publish|date:"d F, Y" }}
+        </p>
+        <div>
+          {{ post.body|markdown|truncatewords_html:35 }}
+        </div>
+        <div class="tags">
+          {% for tag in post.tags.all %}
+            <a href="{% url "blog:post_list_by_tag" tag.slug %}">
+              {{ tag.name }}
+            </a>
+          {% endfor %}
+        </div>
+      </div>
+    </article>
   {% endfor %}
+
   {% include "pagination.html" with page=posts %}
 {% endblock %}

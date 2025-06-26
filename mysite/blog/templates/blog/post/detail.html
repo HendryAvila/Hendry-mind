@@ -4,39 +4,65 @@
 {% block title %}{{ post.title }}{% endblock %}
 
 {% block content %}
-  <h1>{{ post.title }}</h1>
-  <p class="date">
-    Publicado {{ post.publish }} por {{ post.author }}
-  </p>
-  {{ post.body|markdown }}
-  <p>
-    <a href="{% url 'blog:post_share' post.id %}">
-      Comparte este post.
-    </a>
-  </p>
-  <h2>Post similares.</h2>
-  {% for post in similar_posts %}
-    <p>
-      <a href="{{ post.get_absolute_url }}">{{ post.title }}</a>
+  <article class="post-detail">
+    <h1>{{ post.title }}</h1>
+    <p class="post-meta">
+      Por {{ post.author }} el {{ post.publish|date:"d F, Y" }}
     </p>
-  {% empty %}
-    Aun no hay post similares.
-  {% endfor %}
-  {% with comments.count as total_comments %}
-    <h2>
-      {{ total_comments }} comentario{{ total_comments|pluralize }}
-    </h2>
-  {% endwith %}
-  {% for comment in comments %}
-    <div class="comment">
-      <p class="info">
-        Comentado {{ forloop.counter }} por {{ comment.name }}
-        {{ comment.created }}
-      </p>
-      {{ comment.body|linebreaks }}
+    <div class="post-body">
+      {{ post.body|markdown }}
     </div>
-  {% empty %}
-    <p>Aun no hay comentarios.</p>
-  {% endfor %}
+    <div class="tags">
+      <strong>Etiquetas:</strong>
+      {% for tag in post.tags.all %}
+        <a href="{% url "blog:post_list_by_tag" tag.slug %}">
+          {{ tag.name }}
+        </a>
+      {% endfor %}
+    </div>
+  </article>
+
+  <div class="share-section">
+    <h2>¿Te ha gustado? ¡Compártelo!</h2>
+    <p>
+      <a href="{% url "blog:post_share" post.id %}">Enviar por email a un amigo</a>
+    </p>
+  </div>
+
+  {% with comments.count as total_comments %}
+    <div class="comment-section">
+      <h2>
+        {{ total_comments }} comentario{{ total_comments|pluralize }}
+      </h2>
+      {% for comment in comments %}
+        <div class="comment">
+          <p class="info">
+            {{ comment.name }}
+            <span>el {{ comment.created|date:"d F, Y" }}</span>
+          </p>
+          {{ comment.body|linebreaks }}
+        </div>
+      {% empty %}
+        <p>Aún no hay comentarios. ¡Anímate a ser el primero!</p>
+      {% endfor %}
+    </div>
+  {% endwith %}
+
   {% include "blog/post/includes/comment_form.html" %}
+{% endblock %}
+
+{% block sidebar %}
+  <aside id="sidebar">
+    {% if similar_posts %}
+      <div class="sidebar-widget">
+        <h2>Posts Similares</h2>
+        <ul>
+          {% for post in similar_posts %}
+            <li><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></li>
+          {% endfor %}
+        </ul>
+      </div>
+    {% endif %}
+    {% include 'blog/post/includes/sidebar_content.html' %}
+  </aside>
 {% endblock %}
