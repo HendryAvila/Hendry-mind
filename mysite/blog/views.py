@@ -36,32 +36,29 @@ def post_list(request, tag_slug=None):
     Takes the `request` object and retrieves all published posts.
     Implements pagination with 5 posts per page.
     """
-    logger.info("Entrando a la vista post_list")  # Log de inicio
+    logger.info("post_list view triggered for tag: %s", tag_slug or 'None')
 
     post_lists = Post.published.all()
     tag = None
 
     if tag_slug:
-        logger.info(f"Filtrando por tag: {tag_slug}")  # Log del tag recibido
         tag = get_object_or_404(Tag, slug=tag_slug)
         post_lists = post_lists.filter(tags__in=[tag])
+        logger.debug("Filtered posts by tag: %s", tag.name)
 
-    paginator = Paginator(post_lists, 5)  # Paginate with 5 posts per page
-    page_number = request.GET.get('page', 1)  # Get the page number from the request
-    logger.info(f"Página solicitada: {page_number}")  # Log de la paginación
-
+    paginator = Paginator(post_lists, 5)
+    page_number = request.GET.get('page', 1)
+    
     try:
         posts = paginator.page(page_number)
     except PageNotAnInteger:
-        logger.warning("Número de página no es un entero, cargando la primera página")  # Log de advertencia
+        logger.warning("PageNotAnInteger: Page number '%s' is not an integer. Serving page 1.", page_number)
         posts = paginator.page(1)
     except EmptyPage:
-        logger.warning("Número de página fuera de rango, cargando última página")  # Log de advertencia
+        logger.warning("EmptyPage: Page number '%s' is out of range. Serving last page.", page_number)
         posts = paginator.page(paginator.num_pages)
-    except Exception as e:
-        logger.error(f"Error en post_list: {e}", exc_info=True)  # Log de error
-        return render(request, "blog/post/error.html", {"error": e})  # Página de error opcional
-
+    
+    logger.info("Successfully rendered post list for page %s.", page_number)
     return render(request, "blog/post/list.html", {"posts": posts, "tag": tag})
 
 
@@ -90,6 +87,7 @@ def post_detail(request, year, month, day, post):
     Returns:
         HttpResponse: Rendered template with the post, active comments, and comment form.
     """
+    logger.info("Fetching detail for post with slug: %s published on %s-%s-%s", post, year, month, day)
     post = get_object_or_404(Post,
                             status=Post.Status.PUBLISHED,
                             slug=post,
@@ -105,6 +103,8 @@ def post_detail(request, year, month, day, post):
                                         .exclude(id=post.id)
     similar_posts = similar_posts.annotate(same_tags=Count('tags'))\
                                     .order_by('-same_tags', '-publish')[:4]
+    
+    logger.debug("Found %d similar posts for '%s'", len(similar_posts), post.title)
     return render(request, "blog/post/detail.html", {'post': post,
                                                     'comments': comments,
                                                     'form': form,
@@ -132,6 +132,10 @@ def post_comment(request, post_id):
         comment = form.save(commit=False)
         comment.post = post  # Link the comment to the post
         comment.save()  # Save the comment to the database
+        logger.info("Successfully saved comment from '%s' on post '%s'", comment.name, post.title)
+    else:
+        logger.warning("Invalid comment form submission for post '%s'. Errors: %s", post.title, form.errors)
+
     return render(request, "blog/post/comment.html",
                 {
                 "post": post,
@@ -165,9 +169,14 @@ def post_share(request, post_id):
             subject = f"{cd['name']} recommends you read {post.title}"
             message = f"Read {post.title} at {post_url}\n\n" \
                       f"{cd['name']}\'s comment: {cd['comments']}"
-            send_mail(subject, message, 'bloghendrytest@gmail.com', [cd['to']])
-            sent = True  # Update the sent status
-
+            try:
+                send_mail(subject, message, 'bloghendrytest@gmail.com', [cd['to']])
+                sent = True  # Update the sent status
+                logger.info("Post '%s' successfully shared by '%s' to '%s'", post.title, cd['name'], cd['to'])
+            except Exception as e:
+                logger.error("Failed to send email for post '%s'. Error: %s", post.title, e)
+        else:
+            logger.warning("Invalid post share form submission for post '%s'. Errors: %s", post.title, form.errors)
     else:
         # If no data was submitted, display an empty form
         form = EmailPostForm()
@@ -184,9 +193,13 @@ def post_search(request):
     if form.is_valid():
         query = form.cleaned_data['query']
         if query:
+            logger.info("Executing search for query: '%s'", query)
             results = Post.published.annotate(
                 similarity=TrigramSimilarity('title', query)
             ).filter(similarity__gt=0.1).order_by('-similarity')
+            logger.debug("Found %d results for query: '%s'", len(results), query)
+        else:
+            logger.debug("Search form submitted with an empty query.")
     
     return render(request, 'blog/post/search_post.html', {
         'results': results,
